@@ -1,0 +1,15 @@
+== Description
+
+Enhances search command by displaying results in an ascii table and providing options to search (--fields) and display (--columns) gemspec attributes. These options take any gemspec attribute and more than one when comma delimited. Gemspec attributes can be aliased by specifying the first unique string that it starts with i.e. "su" for "summary".
+
+== Bugs/Tickets
+
+Please submit tickets through {github's issue tracker}[http://github.com/cldwalker/gem_grep/issues].
+
+== TODO
+
+* Tests!
+
+== LICENSE
+
+See LICENSE.txt

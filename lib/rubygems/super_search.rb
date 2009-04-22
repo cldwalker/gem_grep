@@ -1,4 +1,5 @@
-# extends Gem::SourceIndex#search to allow searching of any gemspec attribute field
+# Extends Gem::SourceIndex#search to allow searching of any gemspec attribute field.
+# Differs from original method (from rubygems v1.3.2) by a couple of lines.
 module Gem::SuperSearch
   def search(gem_pattern, platform_only = false)
     version_requirement = nil
@@ -31,9 +32,9 @@ module Gem::SuperSearch
       version_requirement = Gem::Requirement.create version_requirement
     end
     
+    # only changes from original method
     search_fields = Gem::CommandManager.instance['grep'].options[:fields] || ['name']
     specs = @gems.values.select do |spec|
-      # spec.send(search_field) =~ gem_pattern and
       search_fields.map {|e| spec.send(e).to_s}.any? {|e| e =~ gem_pattern} and
         version_requirement.satisfied_by? spec.version
     end
