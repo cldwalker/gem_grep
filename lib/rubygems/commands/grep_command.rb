@@ -7,6 +7,7 @@ class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
 
   def initialize
     super 'grep', "Enhances search command by providing extra search options and displaying results as a table"
+    defaults.merge!(:columns=>[:name,:summary,:authors])
 
     add_option('-c', '--columns STRING', 'Gemspec columns/attributes to display per gem') do |value, options|
       options[:columns] = value.split(/\s*,\s*/).map {|e|
@@ -33,7 +34,7 @@ class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
   end
 
   def defaults_str # :nodoc:
-    "--local --columns name,summary,author --fields name --no-installed"
+    "--local --columns name,summary,authors --fields name --no-installed"
   end
   
   def description # :nodoc:
@@ -44,7 +45,6 @@ class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
   end
   
   def execute
-    @columns = options[:columns] || [:name, :summary, :author]
     string = get_one_optional_argument
     options[:name] = /#{string}/i
     Gem.source_index.extend Gem::SuperSearch
@@ -54,12 +54,12 @@ class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
   def output_query_results(tuples)
     tuples = cleanup_tuples(tuples)
     records = tuples.map {|e|
-      @columns.inject({:name=>e[0][0]}) {|h,c| 
+      options[:columns].inject({:name=>e[0][0]}) {|h,c|
         val = e[0][-1].send(c)
         h[c] = val.is_a?(Array) ? val.join(',') : val; h 
       }
     }
-    say Hirb::Helpers::Table.render(records, :fields=>@columns)
+    say Hirb::Helpers::Table.render(records, :fields=>options[:columns])
   end
   
   # borrowed from query command
