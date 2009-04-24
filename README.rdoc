@@ -51,7 +51,7 @@ Choosing your columns works for remote gems as well.
     +---------------------------+---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+
     10 rows in set
 
-For _local gems only_, you get increased searching ability with --fields/-f. Pass it a comma delimited list of gemspec attributes you want to search on, aliased as shown above. Let's see my gems that were created/authored by jamis:
+For <b>local gems only</b>, you get increased searching ability with --fields/-f. Pass it a comma delimited list of gemspec attributes you want to search on, aliased as shown above. Let's see my gems that were created/authored by jamis:
 
     bash> gem grep jamis -f a
 
