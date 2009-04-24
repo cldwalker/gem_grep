@@ -2,6 +2,139 @@
 
 Enhances search command by displaying results in an ascii table and providing options to search (--fields) and display (--columns) gemspec attributes. These options take any gemspec attribute and more than one when comma delimited. Gemspec attributes can be aliased by specifying the first unique string that it starts with i.e. "su" for "summary".
 
+== Install
+
+Install the gem with:
+
+    sudo gem install gem_grep --source http://gems.github.com
+
+== Examples
+
+If you want to choose what gemspec attributes (columns) you see in your results, no problem. Pass a
+comma delimited list to --columns/-c in the order you want to see them. For any gemspec attribute, you can pass its alias which is the first unique string that it starts with.
+
+    # n,ho,da are shortcuts for name,homepage,date
+    bash> gem grep -c n,ho,da irb
+
+    *** LOCAL GEMS ***
+
+    +----------------+-------------------------------------------------+--------------------------------+
+    | name           | homepage                                        | date                           |
+    +----------------+-------------------------------------------------+--------------------------------+
+    | cldwalker-hirb | http://github.com/cldwalker/hirb                | Thu Mar 12 00:00:00 -0400 2009 |
+    | irb_callbacks  | http://rubysideshow.rubyforge.org/irb_callbacks | Tue May 13 00:00:00 -0400 2008 |
+    | irb_rocket     | http://blog.s21g.com/genki                      | Sat Feb 07 00:00:00 -0500 2009 |
+    | sirb           | http://github.com/davidrichards/sirb            | Sun Mar 22 00:00:00 -0400 2009 |
+    | wirble         | http://pablotron.org/software/wirble/           | Fri Sep 08 00:00:00 -0400 2006 |
+    +----------------+-------------------------------------------------+--------------------------------+
+    5 rows in set
+
+Choosing your columns works for remote gems as well.
+
+    bash> gem grep console -r -c n,ho,des
+
+    *** REMOTE GEMS ***
+
+    +---------------------------+---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+
+    | name                      | homepage                                    | description                                                                                                              |
+    +---------------------------+---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+
+    | CapConsole                | http://handle.rubyforge.org                 | This adds a new capistrano task called console:shell which, when run, opens a script/console shell on your remote pro... |
+    | cldwalker-console_update  | http://github.com/cldwalker/console_update  | A rails plugin which allows you to edit your database records via the console and your favorite editor.                  |
+    | Console                   | http://www.nebulargauntlet.org              |                                                                                                                          |
+    | jtrupiano-timecop-console | http://github.com/jtrupiano/timecop-console |                                                                                                                          |
+    | live_console              | http://debu.gs/live-console                 |                                                                                                                          |
+    | mongrel_console           |                                             | Provides a combined Mongrel and Rails IRB console.                                                                       |
+    | simpleconsole             | http://simpleconsole.rubyforge.org          |                                                                                                                          |
+    | takai-twitty-console      | http://github.com/takai/twitty-console/     | TwittyConsole is a console based client for Twitter.                                                                     |
+    | timecop-console           | http://github.com/jtrupiano/timecop-console |                                                                                                                          |
+    | win32console              | http://rubyforge.org/projects/winconsole    | This gem packages Gonzalo Garramuno's Win32::Console project, and includes a compiled binary for speed. The Win32::Co... |
+    +---------------------------+---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------+
+    10 rows in set
+
+For _local gems only_, you get increased searching ability with --fields/-f. Pass it a comma delimited list of gemspec attributes you want to search on, aliased as shown above. Let's see my gems that were created/authored by jamis:
+
+    bash> gem grep jamis -f a
+
+    *** LOCAL GEMS ***
+
+    +-----------------+------------------------------------------------------------------------------------------------------------------------------------------+------------+
+    | name            | summary                                                                                                                                  | authors    |
+    +-----------------+------------------------------------------------------------------------------------------------------------------------------------------+------------+
+    | capistrano      | Capistrano is a utility and framework for executing commands in parallel on multiple remote machines, via SSH.                           | Jamis Buck |
+    | needle          | Needle is a Dependnjection/Inversion of Control container for Ruby. It supports (constructor) i... | Jamis Buck |
+    | net-scp         | A pur                                                                     | Net::SFTP is a pure-Ruby implementation of the SFTP c                                        | Jamis Buck |
+    | net-ation of the SSH2 client protocol.                             Buck |
+    | net-ssh-gateway | A simple library to assist in esta                                                             |  to allow Ruby scripts to interface with a SQLite3 database.      | Jamis Buck |
+    | syntax          | Syntax is Ruby library for performing simple syntax highlighting.                                                                        | Jamis Buck |
+    +-----------------+------------------------------------------------------------------------------------------------------------------------------------------+------------+
+    8 rows in set
+
+As already mentioned, you can search multiple attributes. Let's search for irb inside gemspec attributes name, description and summary:
+
+    bash> gem grep irb -f n,su,des
+
+    *** LOCAL GEMS ***
+
+    +-----------------------+----------------------------------------------------------------------------------------------------------+------------------------------+
+    | name                  | summary                                                                                                  | authors                      |
+    +-----------------------+----------------------------------------------------------------------------------------------------------+------------------------------+
+    | cldwalker-hirb        | A mini view framework for irb that's easy to use, even while under its influence.                        | Gabriel Horner               |
+    | irb_callbacks         | Adds three callbacks to the prompt, eval, and output phases of irb                                       | Mike Judge                   |
+    | irb_rocket            | irb plugin that makes irb #=> rocket                                                                     | Genki Takiuchi               |
+    | matthew-method_lister | Pretty method listers and finders, for use in IRB.                                                       | Matthew O'Connor             |
+    | rtags                 | rtags is a Ruby replacement for ctags - allowing for name navigation in source code using vim, emacs ... | Pjotr Prins, Keiju Ishitsuka |
+    | sirb                  | Descriptive statistics + IRB + any other useful numerical library you may have around                    | David Richards               |
+    | utility_belt          | A grab-bag of IRB power user madness.                                                                    | Giles Bowkett                |
+    | wirble                | Handful of common Irb features, made easy.                                                               | Paul Duncan                  |
+    +-----------------------+----------------------------------------------------------------------------------------------------------+------------------------------+
+
+Like the default search and query commands, grep converts your search term to a regular expression. Let's use this to find out my gems that were created from 2000-2005. Hopefully not too many.
+
+    bash> gem grep 200[0-5] -f da -c n,da,su
+
+    *** LOCAL GEMS ***
+
+    +-------------+--------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+    | name        | date                           | summary                                                                                                                           |
+    +-------------+--------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+    | dnssd       | Thu Oct 07 00:00:00 -0400 2004 | DNS Service Discovery (aka Rendezvous) API for Ruby                                                                               |
+    | extensions  | Thu Dec 09 00:00:00 -0500 2004 | 'extensions' is a set of extensions to Ruby's built-in classes.  It gathers common idioms, useful additions, and aliases, comp... |
+    | mysql       | Sun Oct 09 00:00:00 -0400 2005 | MySQL/Ruby provides the same functions for Ruby programs that the MySQL C API provides for C programs.                            |
+    | needle      | Fri Dec 23 00:00:00 -0500 2005 | Needle is a Dependency Injection/Inversion of Control container for Ruby. It supports both type-2 (setter) and type-3 (constru... |
+    | Platform    | Thu Dec 01 00:00:00 -0500 2005 | Hopefully robust platform sensing                                                                                                 |
+    | RedCloth    | Thu Sep 15 00:00:00 -0400 2005 | RedCloth is a module for using Textile and Markdown in Ruby. Textile and Markdown are text formats.  A very simple text format... |
+    | stemmer     | Wed Apr 20 00:00:00 -0400 2005 | Word stemming algorithm(s)                                                                                                        |
+    | syntax      | Sat Jun 18 00:00:00 -0400 2005 | Syntax is Ruby library for performing simple syntax highlighting.                                                                 |
+    | termios     | Fri Sep 24 00:00:00 -0400 2004 | Termios module are simple wrapper for termios(3). It can be included into IO-family classes and can extend IO-family objects. ... |
+    | text-format | Fri Jun 24 00:00:00 -0400 2005 | Text::Format formats fixed-width text nicely.                                                                                     |
+    | text-hyphen | Mon Dec 20 00:00:00 -0500 2004 | Multilingual word hyphenation according to modified TeX hyphenation pattern files.                                                |
+    | tree        | Thu Dec 29 00:00:00 -0500 2005 | Ruby implementation of the Tree data structure.                                                                                   |
+    +-------------+--------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+    12 rows in set
+
+
+gem grep can also search inside gemspec attributes that are arrays i.e. @dependencies@. Let's see my gems that depend on rake:
+
+    bash> gem grep rake -f dep -c n,dep
+
+    *** LOCAL GEMS ***
+
+    +---------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+    | name          | dependencies                                                                                                                                 |
+    +---------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+    | bones         | rake (>= 0.8.3, runtime)                                                                                                                     |
+    | echoe         | rake (>= 0, runtime),rubyforge (>= 1.0.0, runtime),highline (>= 0, runtime)                                                                  |
+    | ferret        | rake (> 0.0.0, runtime)                                                                                                                      |
+    | hoe           | rubyforge (>= 1.0.1, runtime),rake (>= 0.8.3, runtime)                                                                                       |
+    | launchy       | rake (>= 0.8.1, runtime),configuration (>= 0.0.5, runtime)                                                                                   |
+    | mislav-hanna  | rdoc (~> 2.2.0, runtime),haml (~> 2.0.4, runtime),rake (~> 0.8.2, runtime),echoe (>= 0, runtime)                                             |
+    | mocha         | rake (>= 0, runtime)                                                                                                                         |
+    | rails         | rake (>= 0.7.2, runtime),activesupport (= 1.4.4, runtime),activerecord (= 1.15.6, runtime),actionpack (= 1.13.6, runtime),actionmailer (=... |
+    | red           | ParseTree (~> 2.2.0, runtime),rake (~> 0.8.3, runtime),newgem (>= 1.0.6, development),hoe (>= 1.8.0, development)                            |
+    | www-delicious | rake (>= 0.8, development),echoe (>= 3.1, development),mocha (>= 0.9, development)                                                           |
+    +---------------+----------------------------------------------------------------------------------------------------------------------------------------------+
+    10 rows in set
+
 == Bugs/Tickets
 
 Please submit tickets through {github's issue tracker}[http://github.com/cldwalker/gem_grep/issues].
