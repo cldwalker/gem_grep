@@ -1,3 +1,7 @@
+require 'rubygems/commands/query_command'
+require 'rubygems/super_search'
+require 'hirb'
+
 class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
   class<<self
     def valid_gemspec_columns
@@ -64,7 +68,6 @@ class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
   
   # borrowed from query command
   def cleanup_tuples(spec_tuples)
-    output = []
     versions = Hash.new { |h,name| h[name] = [] }
 
     spec_tuples.each do |spec_tuple, source_uri|

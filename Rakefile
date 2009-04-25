@@ -27,6 +27,7 @@ begin
     s.extra_rdoc_files = ["README.rdoc", "LICENSE.txt"]
     s.files = FileList["[A-Z]*", "{bin,lib,test}/**/*"]
     s.add_dependency 'cldwalker-hirb'
+    s.rubyforge_project = 'tagaholic'
   end
 
 rescue LoadError
