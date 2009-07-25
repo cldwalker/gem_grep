@@ -33,7 +33,8 @@ module Gem::SuperSearch
     end
     
     # only changes from original method
-    search_fields = Gem::CommandManager.instance['grep'].options[:fields] || ['name']
+    # search_fields = Gem::CommandManager.instance['grep'].options[:fields] || ['name']
+    search_fields = GemGrep.grep_fields
     specs = @gems.values.select do |spec|
       search_fields.map {|e| spec.send(e).to_s}.any? {|e| e =~ gem_pattern} and
         version_requirement.satisfied_by? spec.version

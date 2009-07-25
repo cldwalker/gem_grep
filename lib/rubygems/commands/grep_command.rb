@@ -1,28 +1,20 @@
 require 'rubygems/commands/query_command'
 require 'rubygems/super_search'
 require 'hirb'
+require 'gem_grep'
 
 class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
-  class<<self
-    def valid_gemspec_columns
-      @valid_gemspec_columns ||= Gem::Specification.attribute_names.map {|e| e.to_s}.sort
-    end
-  end
 
   def initialize
     super 'grep', "Enhances search command by providing extra search options and displaying results as a table"
     defaults.merge!(:columns=>[:name,:summary,:authors])
 
     add_option('-c', '--columns STRING', 'Gemspec columns/attributes to display per gem') do |value, options|
-      options[:columns] = value.split(/\s*,\s*/).map {|e|
-        self.class.valid_gemspec_columns.detect {|c| c =~ /^#{e}/ }
-      }.compact.map {|e| e.to_sym}
+      options[:columns] = GemGrep.parse_input(value).map {|e| e.to_sym}
     end
 
     add_option('-f', '--fields STRING', 'Gemspec fields/attributes to search (only for local gems)') do |value, options|
-      options[:fields] = value.split(/\s*,\s*/).map {|e|
-        self.class.valid_gemspec_columns.detect {|c| c =~ /^#{e}/ }
-      }.compact
+      options[:fields] = GemGrep.parse_input(value)
     end
     remove_option '--name-matches'
     remove_option '-d'
