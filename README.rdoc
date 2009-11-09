@@ -6,7 +6,7 @@ Enhances search command by displaying results in an ascii table and providing op
 
 Install the gem with:
 
-    gem source -a http://gems.github.com && sudo gem install cldwalker-gem_grep
+    sudo gem install gem_grep
 
 == Examples
 
