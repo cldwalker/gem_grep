@@ -26,7 +26,7 @@ begin
     s.has_rdoc = true
     s.extra_rdoc_files = ["README.rdoc", "LICENSE.txt"]
     s.files = FileList["[A-Z]*", "{bin,lib,test}/**/*"]
-    s.add_dependency 'cldwalker-hirb'
+    s.add_dependency 'hirb'
     s.rubyforge_project = 'tagaholic'
   end
 
