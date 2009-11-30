@@ -33,14 +33,14 @@ module GemGrep
     end
 
     def gem_server
-      {:rubyforge=>"http://gems.rubyforge.org", :github=>"http://gems.github.com"}
+      {:rubyforge=>"http://gems.rubyforge.org", :github=>"http://gems.github.com", :gemcutter=>'http://gemcutter.org'}
     end
 
     def gem_index
       @gem_index ||= begin
         puts "Loading large gem index. Patience is a bitch ..."
-        temp_index = Marshal.load(File.read(marshal_file))
-        temp_index.extend(Gem::SuperSearch)
+        spec_hash = Hash[*Marshal.load(File.read(marshal_file)).flatten]
+        Gem::SourceIndex.new(spec_hash).extend(Gem::SuperSearch)
       end
     end
 
