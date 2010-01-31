@@ -4,7 +4,7 @@ require 'hirb'
 require 'gem_grep'
 
 class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
-
+  attr_accessor :results, :results_only
   def initialize
     super 'grep', "Enhances search command by providing extra search options and displaying results as a table"
     defaults.merge!(:columns=>[:name,:summary,:authors])
@@ -14,7 +14,7 @@ class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
     end
 
     add_option('-f', '--fields STRING', 'Gemspec fields/attributes to search (only for local gems)') do |value, options|
-      options[:fields] = GemGrep.parse_input(value)
+      GemGrep.grep_fields = options[:fields] = GemGrep.parse_input(value)
     end
     remove_option '--name-matches'
     remove_option '-d'
@@ -37,7 +37,7 @@ class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
     'Enhances search command by providing options to search (--fields) and display (--columns) ' +
    'gemspec attributes. Results are displayed in an ascii table. Gemspec attributes can be specified '+
    'by the first unique string that it starts with i.e. "su" for "summary". To specify multiple gemspec attributes, delimit ' +
-   "them with commas. Gemspec attributes available to options are: #{self.class.valid_gemspec_columns.join(', ')}."
+   "them with commas. Gemspec attributes available to options are: #{GemGrep.valid_gemspec_columns.join(', ')}."
   end
   
   def execute
@@ -49,13 +49,14 @@ class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
   
   def output_query_results(tuples)
     tuples = cleanup_tuples(tuples)
-    records = tuples.map {|e|
+    @results = tuples.map {|e|
       options[:columns].inject({:name=>e[0][0]}) {|h,c|
         val = e[0][-1].send(c)
         h[c] = val.is_a?(Array) ? val.join(',') : val; h 
       }
     }
-    say Hirb::Helpers::Table.render(records, :fields=>options[:columns])
+    @results_only ? @results :
+      say(Hirb::Helpers::Table.render(@results, :fields=>options[:columns]))
   end
   
   # borrowed from query command
