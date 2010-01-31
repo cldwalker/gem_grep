@@ -48,13 +48,7 @@ class Gem::Commands::GrepCommand < Gem::Commands::QueryCommand
   end
   
   def output_query_results(tuples)
-    tuples = cleanup_tuples(tuples)
-    @results = tuples.map {|e|
-      options[:columns].inject({:name=>e[0][0]}) {|h,c|
-        val = e[0][-1].send(c)
-        h[c] = val.is_a?(Array) ? val.join(',') : val; h 
-      }
-    }
+    @results = cleanup_tuples(tuples).map {|e| e[0][-1]}
     @results_only ? @results :
       say(Hirb::Helpers::Table.render(@results, :fields=>options[:columns]))
   end
