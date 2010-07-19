@@ -135,14 +135,10 @@ gem grep can also search inside gemspec attributes that are arrays i.e. @depende
     +---------------+----------------------------------------------------------------------------------------------------------------------------------------------+
     10 rows in set
 
-== Bugs/Tickets
+== Bugs/Issues
 
 Please submit tickets through {github's issue tracker}[http://github.com/cldwalker/gem_grep/issues].
 
-== TODO
+== Todo
 
 * Tests!
-
-== LICENSE
-
-See LICENSE.txt
