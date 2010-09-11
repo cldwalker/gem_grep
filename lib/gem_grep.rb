@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'rubygems/super_search'
 require 'zlib'
 require 'fileutils'
