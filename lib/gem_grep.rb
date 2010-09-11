@@ -32,7 +32,7 @@ module GemGrep
     end
 
     def gem_server
-      {:rubyforge=>"http://gems.rubyforge.org", :github=>"http://gems.github.com"}
+      {:rubygems=>"http://rubygems.org", :github=>"http://gems.github.com"}
     end
 
     def gem_index
