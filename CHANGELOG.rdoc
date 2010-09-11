@@ -1,0 +1,9 @@
+== 0.1.2
+* Updated .gemspec and Rakefile and removed jeweler
+
+== 0.1.1
+* Allow usage outside of rubygems
+* Add index loading
+
+== 0.1.0
+* Initial release
